@@ -1,7 +1,14 @@
+import 'package:auto_updater/auto_updater.dart';
 import 'package:flutter/material.dart';
-import 'package:upgrader/upgrader.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  String feedURL =
+      'https://raw.githubusercontent.com/rymesaint/test_upgrader/main/appcast.xml';
+  await autoUpdater.setFeedURL(feedURL);
+  await autoUpdater.checkForUpdates();
+  await autoUpdater.setScheduledCheckInterval(3600);
   runApp(const MyApp());
 }
 
@@ -11,8 +18,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const appcastURL =
-        'https://raw.githubusercontent.com/rymesaint/test_upgrader/main/appcast.xml';
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -27,21 +32,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: UpgradeAlert(
-          upgrader: Upgrader(
-            appcastConfig: AppcastConfiguration(
-              url: appcastURL,
-              supportedOS: [
-                'macos',
-                'android',
-                'windows',
-              ],
-            ),
-          ),
-          child: Scaffold(
-            appBar: AppBar(title: const Text('Upgrader Example')),
-            body: const Center(child: Text('Checking...')),
-          )),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
